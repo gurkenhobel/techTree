@@ -22,7 +22,7 @@ def battle(char1, char2):
     :type char2: model.CharStats
     :type char1: model.CharStats
     """
-    battleIsRunning = True;
+    battleIsRunning = True
     timer = 0
     winner = None
     regTimer = 0.0
