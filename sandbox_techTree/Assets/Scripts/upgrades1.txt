@@ -1,0 +1,3 @@
+crit10
+atkSpd0_5
+reg1
