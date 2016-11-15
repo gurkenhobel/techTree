@@ -30,7 +30,7 @@ def battle(char1, char2):
     char2AttackTimeStamp = char2.AttackSpeed
     char1Alive = True
     char2Alive = True
-    while battleIsRunning:
+    while battleIsRunning and timer < 200:
         # char1 attack
         if timer > char1AttackTimeStamp:
             attack(char1, char2)
@@ -56,6 +56,7 @@ def battle(char1, char2):
             # char2 regen
             char2.HealthPoints = hlp.clamp(char2.HealthRegenPerSecond / 10 + char2.HealthPoints, 0,
                                            char2.MaxHealthPoints)
+        timer += 0.1
 
     if char1Alive and not char2Alive:
         winner = char1

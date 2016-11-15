@@ -1,8 +1,9 @@
 from model import CharStats
 
 import random as rnd
+import helper as hlp
 
-atkSpdFactor = 1
+atkSpdFactor = 0.02
 atkFactor = 1
 critFactor = 1
 critChanceFactor = 1
@@ -18,8 +19,12 @@ def generateRandom(budget):
     rnd.seed()
     for i in range(0, budget):
         attr = rnd.randrange(1, 7, 1)
+        if char.AttackSpeed <= 0.1 and attr == 1:
+            attr = rnd.randrange(2, 7, 1)
         if attr == 1:
-            char.AttackSpeed -= atkSpdFactor    #TODO: attackspeed < 0 ?
+            char.AttackSpeed -= atkSpdFactor
+            if char.AttackSpeed <= 0:
+                char.AttackSpeed = 0.1
         elif attr == 2:
             char.AttackStrength += atkFactor
         elif attr == 3:
@@ -38,7 +43,7 @@ def generateRandom(budget):
     return char
 
 
-def mate(parent1, parent2):
+def mate(parent1, parent2, targetBudget):
     """
 
     :type budget: int
@@ -46,10 +51,6 @@ def mate(parent1, parent2):
     :type parent1: CharStats
     """
 
-    budget = parent1.AttackSpeed / atkSpdFactor + parent1.AttackStrength / atkFactor + parent1.CritChance / critChanceFactor + parent1.CritFactor /critFactor + parent1.DefencePoints /deffFactor + parent1.HealthPoints /hpFactor + parent1.HealthRegenPerSecond /regFactor
-    print "1 -",budget - 29.6
-    budget = parent2.AttackSpeed / atkSpdFactor + parent2.AttackStrength / atkFactor + parent2.CritChance / critChanceFactor + parent2.CritFactor / critFactor + parent2.DefencePoints / deffFactor + parent2.HealthPoints / hpFactor + parent2.HealthRegenPerSecond / regFactor
-    print "2 -", budget -29.6
 
     attackSpeed = (parent1.AttackSpeed + parent2.AttackSpeed)/2
     attackStrength = (parent1.AttackStrength + parent2.AttackStrength)/2
@@ -61,8 +62,11 @@ def mate(parent1, parent2):
 
     newChar = CharStats(attackSpeed, attackStrength,critChance,crtFactor,deffPoints,healthPoints,healthPoints,regen)
 
-    budget = newChar.AttackSpeed / atkSpdFactor + newChar.AttackStrength / atkFactor + newChar.CritChance / critChanceFactor + newChar.CritFactor / critFactor + newChar.DefencePoints / deffFactor + newChar.HealthPoints / hpFactor + newChar.HealthRegenPerSecond / regFactor
-    print budget
+
+    budget = (baseStats.AttackSpeed - newChar.AttackSpeed) / atkSpdFactor + newChar.AttackStrength / atkFactor + newChar.CritChance / critChanceFactor + newChar.CritFactor / critFactor + newChar.DefencePoints / deffFactor + newChar.HealthPoints / hpFactor + newChar.HealthRegenPerSecond / regFactor
+
+
+    newChar.HealthPoints += targetBudget - (budget - 18.6)      #loss in the estimation between parents. adds to health because of reasons. 18.6 is the value of the basestats
 
     return  newChar
 

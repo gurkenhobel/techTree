@@ -1,11 +1,10 @@
 import generateChar as genChar
 import model as model
-from numpy.random import choice
 import helper as hlp
 
 powerLevel = 100
-populationMax = 1000
-populationMin = 500
+populationMax = 500
+populationMin = 100
 iterations = 1000
 roundsPerMatch = 50
 
@@ -15,11 +14,11 @@ population = []
 
 def rate(pool):
     print "rate population"
-    pb = hlp.ProgressBar(len(pool))
+    pb = hlp.ProgressBar(len(pool) - 1)
     for i in range(0, len(pool)):
         pool[i].rateAgainst(pool[(i+1)%(len(pool)-1)], roundsPerMatch/2)
         pb.progress(i)
-    print "-Done"
+    pb.done()
 
 def decimate(pool):
     """
@@ -27,16 +26,17 @@ def decimate(pool):
     :type pool: list
     """
     print "decimate population"
+    pb = hlp.ProgressBar(len(pool))
     for c in pool:
         if c.Rating <= 0:
             pool.remove(c)
+            pb.progress(len(pool))
         if len(pool) < populationMin:
             break
 
     while len(pool) > populationMax:
         rate(pool)
         decimate(pool)
-    print "##########"
 
 def populate(pool):
     return
@@ -44,15 +44,13 @@ def populate(pool):
 
 #initialPopulation
 print "create first generation"
-pb = hlp.ProgressBar(populationMax)
-for i in range(1, populationMax):
+pb = hlp.ProgressBar(populationMax -1)
+for i in range(0, populationMax):
     population.append(model.Character(genChar.generateRandom(powerLevel), powerLevel/2))
     pb.progress(i)
-print "-Done"
+pb.done()
 #initialRating
 rate(population)
 
-#print ratings
-# for c in population:
-#     print c.Rating
+
 
