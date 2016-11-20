@@ -60,8 +60,14 @@ def populate(pool, i):
     print "create generation", i
     pb = hlp.ProgressBar(populationMax - 1)
     for i in range(0, populationMax):
-        pool.append(model.Character(genChar.generateRandom(powerLevel), 50))
-        pb.progress(i)
+        method = rnd.randrange(0,1)
+        if  method == 0:
+            pool.append(model.Character(genChar.generateRandom(powerLevel), 50))
+            pb.progress(i)
+        elif method == 1:
+            p1 = pool[rnd.randrande(0, len(pool - 1))].Stats
+            p2 = pool[rnd.randrande(0, len(pool - 1))].Stats
+            pool.append(model.Character(genChar.mate(p1, p2, powerLevel)), 50)
     pb.done()
     return
 
