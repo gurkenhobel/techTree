@@ -16,6 +16,5 @@ class ProgressBar:
             for i in range(0, state - self.CurrentState):
                 sys.stdout.write("#")
             self.CurrentState = state
-
     def done(self):
         print "]-Done"

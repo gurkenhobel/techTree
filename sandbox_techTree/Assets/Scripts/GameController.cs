@@ -40,7 +40,7 @@ namespace Gurkenhobel.TechTree
             var dmg = attacker.CharacterStats.AttackStrength;
             if (IsCrit(attacker.CharacterStats.CritChance))
             {
-                Debug.Log("Crit!");
+                //Debug.Log("Crit!");
                 dmg *= attacker.CharacterStats.CritFactor;
             }
             dmg -= defender.CharacterStats.DefencePoints;
@@ -73,7 +73,7 @@ namespace Gurkenhobel.TechTree
             SetEnemy(testEnemyGo.GetComponent<Character>());
 
             _enemyCharacter.CharacterStats = GetEnemyStats();
-            Debug.Log("new enemy spawned");
+            //Debug.Log("new enemy spawned");
             Scoreboard.Level++;
         }
 
@@ -97,7 +97,7 @@ namespace Gurkenhobel.TechTree
                     playerCharacter.Attack();
                     _enemyCharacter.GetAttacked();
                     _playerAttackTimestamp = Time.time + playerCharacter.CharacterStats.AttackSpeed;
-                    Debug.Log("player hp: " + playerCharacter.CharacterStats.HealthPoints);
+                    //Debug.Log("player hp: " + playerCharacter.CharacterStats.HealthPoints);
                 }
 
                 //EnemyAttack
@@ -107,7 +107,7 @@ namespace Gurkenhobel.TechTree
                     _enemyCharacter.Attack();
                     playerCharacter.GetAttacked();
                     _enemyAttackTimestamp = Time.time + _enemyCharacter.CharacterStats.AttackSpeed;
-                    Debug.Log("enemy hp: " + _enemyCharacter.CharacterStats.HealthPoints);
+                    //Debug.Log("enemy hp: " + _enemyCharacter.CharacterStats.HealthPoints);
                 }
 
                 //PlayerDeath

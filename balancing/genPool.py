@@ -1,10 +1,12 @@
 import generateChar as genChar
 import model as model
 import helper as hlp
+import random as rnd
+import fight as fight
 
 powerLevel = 100
-populationMax = 500
-populationMin = 100
+populationMax = 1000
+populationMin = 500
 iterations = 1000
 roundsPerMatch = 50
 
@@ -20,25 +22,47 @@ def rate(pool):
         pb.progress(i)
     pb.done()
 
+def killBelowRating(limit, pool):
+    for c in pool:
+        if(c.Rating < limit):
+            pool.remove(c)
+        if(len(pool) < populationMin):
+            break
+
 def decimate(pool):
     """
 
     :type pool: list
     """
     print "decimate population"
-    pb = hlp.ProgressBar(len(pool))
     for c in pool:
+        #clean out negative ratings
         if c.Rating <= 0:
             pool.remove(c)
-            pb.progress(len(pool))
         if len(pool) < populationMin:
             break
 
-    while len(pool) > populationMax:
+    # random = rnd.randrange(0,0)
+    # if random == 1:
+    limit = fight.getAverageRating(pool)
+
+    killBelowRating(limit, pool)
+
+    for c in population:
+        c.Rating = 50
+
+
+    while len(pool) > populationMin:
         rate(pool)
         decimate(pool)
 
-def populate(pool):
+def populate(pool, i):
+    print "create generation", i
+    pb = hlp.ProgressBar(populationMax - 1)
+    for i in range(0, populationMax):
+        pool.append(model.Character(genChar.generateRandom(powerLevel), 50))
+        pb.progress(i)
+    pb.done()
     return
 
 
@@ -46,11 +70,20 @@ def populate(pool):
 print "create first generation"
 pb = hlp.ProgressBar(populationMax -1)
 for i in range(0, populationMax):
-    population.append(model.Character(genChar.generateRandom(powerLevel), powerLevel/2))
+    population.append(model.Character(genChar.generateRandom(powerLevel), 50))
     pb.progress(i)
 pb.done()
 #initialRating
 rate(population)
+g = 1
+for i in range(0, iterations):
+    decimate(population)
+    g += 1
+    populate(population, g)
+    rate(population)
+
+
+
 
 
 

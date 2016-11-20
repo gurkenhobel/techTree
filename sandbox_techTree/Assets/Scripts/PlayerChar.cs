@@ -26,17 +26,17 @@ namespace Gurkenhobel.TechTree
             foreach (var upgrade in earlyLayer)
             {
                 upgrade.Apply(CharacterStats);
-                Debug.Log("applied upgrade: " + upgrade.Name);
+                //Debug.Log("applied upgrade: " + upgrade.Name);
             }
             foreach (var upgrade in baseLayer)
             {
                 upgrade.Apply(CharacterStats);
-                Debug.Log("applied upgrade: " + upgrade.Name);
+                //Debug.Log("applied upgrade: " + upgrade.Name);
             }
             foreach (var upgrade in lateLayer)
             {
                 upgrade.Apply(CharacterStats);
-                Debug.Log("applied upgrade: " + upgrade.Name);
+                //Debug.Log("applied upgrade: " + upgrade.Name);
             }
         }
 

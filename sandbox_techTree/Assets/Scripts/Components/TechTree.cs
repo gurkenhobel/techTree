@@ -16,6 +16,8 @@ namespace Gurkenhobel.TechTree.Components
     {
         private List<IUpgrade> _upgrades = new List<IUpgrade>();
 
+        public GameObject TechTreeCanvas;
+
         public string saveLocation;
 
         public List<IUpgrade> GetUpgrades()
@@ -58,11 +60,11 @@ namespace Gurkenhobel.TechTree.Components
                     break;
                 default:
                     newUpgrade = null;
-                    Debug.Log("invalid Upgrade: " + id);
+                    //Debug.Log("invalid Upgrade: " + id);
                     break;
             }
             if (newUpgrade != null)
-                Debug.Log("Added upgrade: " + newUpgrade.Name);
+                //Debug.Log("Added upgrade: " + newUpgrade.Name);
 
             _upgrades.Add(newUpgrade);
         }

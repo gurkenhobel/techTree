@@ -39,7 +39,10 @@ class Character:
             elif winner is enemy.Stats:
                 enemy.Rating += 1
                 self.Rating -= 1
-
+            if self.Rating > 100:
+                self.Rating = 100
+            if enemy.Rating > 100:
+                enemy.Rating = 100
 
 
 

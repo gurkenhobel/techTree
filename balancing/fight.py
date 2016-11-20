@@ -15,10 +15,15 @@ def attack(attacker, deffender):
     if dmg > 0:
         deffender.HealthPoints -= dmg
 
+def getAverageRating(pool):
+    average = 0.0
+    for c in pool:
+        average += float(c.Rating) / len(pool)
+    return average
+
 
 def battle(char1, char2):
     """
-
     :type char2: model.CharStats
     :type char1: model.CharStats
     """
