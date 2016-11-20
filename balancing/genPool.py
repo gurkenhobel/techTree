@@ -5,10 +5,10 @@ import random as rnd
 import fight as fight
 
 powerLevel = 100
-populationMax = 1000
-populationMin = 500
-iterations = 1000
-roundsPerMatch = 50
+populationMax = 300
+populationMin = 150
+iterations = 10
+roundsPerMatch = 2
 
 population = []
 
@@ -16,10 +16,16 @@ population = []
 
 def rate(pool):
     print "rate population"
+    threads = []
     pb = hlp.ProgressBar(len(pool) - 1)
     for i in range(0, len(pool)):
-        pool[i].rateAgainst(pool[(i+1)%(len(pool)-1)], roundsPerMatch/2)
+        for e in range(0, len(pool)):
+            if e != i:
+                threads.append(pool[i].rateAgainst(pool[e], roundsPerMatch/2))
         pb.progress(i)
+    for t in threads:
+        if t.isAlive():
+            t.join()
     pb.done()
 
 def killBelowRating(limit, pool):
@@ -87,7 +93,6 @@ for i in range(0, iterations):
     g += 1
     populate(population, g)
     rate(population)
-
 
 
 

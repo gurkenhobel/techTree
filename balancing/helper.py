@@ -18,3 +18,10 @@ class ProgressBar:
             self.CurrentState = state
     def done(self):
         print "]-Done"
+
+
+def printAllFields(instance):
+    v = dict(instance.__dict__)
+
+    for n in v.keys():
+        print n, v[n]

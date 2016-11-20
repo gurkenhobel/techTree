@@ -1,6 +1,7 @@
 import random as rnd
 import model as model
 import helper as hlp
+import threading as threading
 
 
 def IsCrit(critchance):
@@ -71,4 +72,30 @@ def battle(char1, char2):
     char1.HealthPoints = char1.MaxHealthPoints
     char2.HealthPoints = char2.MaxHealthPoints
     return winner
+
+class battleThread(threading.Thread):
+    def __init__(self, char1, char2, rounds):
+        threading.Thread.__init__(self)
+        self.char1 = char1
+        self.char2 = char2
+        self.rounds = rounds
+    def run(self):
+        for i in range(0, self.rounds):
+            winner = battle(self.char1.Stats, self.char2.Stats)
+            if winner is self.char1.Stats:
+                self.char1.Lock.acquire()
+                self.char1.Rating += 1
+                self.char1.Lock.release()
+                self.char2.Lock.acquire()
+                self.char2.Rating -= 1
+                self.char2.Lock.release()
+            elif winner is self.char2.Stats:
+                self.char1.Lock.acquire()
+                self.char1.Rating -= 1
+                self.char1.Lock.release()
+                self.char2.Lock.acquire()
+                self.char2.Rating += 1
+                self.char2.Lock.release()
+
+
 
