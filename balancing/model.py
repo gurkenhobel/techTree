@@ -22,17 +22,17 @@ class Character:
     def __init__(self, stats, rating):
         self.Stats = stats
         self.Rating = rating
-        self.Lock = threading.Lock()
 
 
-    def rateAgainst(self, enemy, rounds):
+    def rateAgainst(self, enemy, rounds, battleThread):
         """
 
         :type rounds: int
         :type enemy: Character
         """
-
-        battleThread = fight.battleThread(self, enemy, rounds)
+        battleThread.char1 = self
+        battleThread.char2 = enemy
+        fight.battleThread(self, enemy, rounds)
         battleThread.start()
         return battleThread
 

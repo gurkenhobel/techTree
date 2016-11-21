@@ -36,7 +36,7 @@ def battle(char1, char2):
     char2AttackTimeStamp = char2.AttackSpeed
     char1Alive = True
     char2Alive = True
-    while battleIsRunning and timer < 200:
+    while battleIsRunning and timer < 100:
         # char1 attack
         if timer > char1AttackTimeStamp:
             attack(char1, char2)
@@ -73,29 +73,83 @@ def battle(char1, char2):
     char2.HealthPoints = char2.MaxHealthPoints
     return winner
 
+def determinCritCount(atk, hits):
+    """
+
+    :type atk: model.CharStats
+    """
+    count = 0
+    for i in range(1, hits):
+        if IsCrit(atk.CritChance):
+            count += atk.AttackStrength * atk.CritFactor
+    return count
+
+def determinWinner(char1, char2):
+    """
+
+    :type char2: model.CharStats
+    :type char1: model.CharStats
+    """
+    char1MinDPS_raw = char1.AttackStrength / char1.AttackSpeed
+    char2MinDPS_raw = char2.AttackStrength / char2.AttackSpeed
+
+    char1MinDPS = char1MinDPS_raw - char2.DefencePoints
+    char2MinDPS = char2MinDPS_raw - char1.DefencePoints
+
+    char1MaxTimeToKill_raw = char2.HealthPoints / char1MinDPS
+    char1MaxTimeToKill = char1MaxTimeToKill_raw
+    regheal = char1MaxTimeToKill * char2.HealthRegenPerSecond
+
+    while char2.HealthPoints + regheal - char1MaxTimeToKill * char1MinDPS > 0:
+        regheal = char1MaxTimeToKill * char2.HealthRegenPerSecond
+        char1MaxTimeToKill += char1.AttackSpeed
+        if char1MaxTimeToKill > 100:
+            char1MaxTimeToKill = -1
+            break
+
+    char2MaxTimeToKill_raw = char1.HealthPoints / char1MinDPS
+    char2MaxTimeToKill = char2MaxTimeToKill_raw
+    regheal = char2MaxTimeToKill * char1.HealthRegenPerSecond
+
+    while char1.HealthPoints + regheal - char2MaxTimeToKill * char2MinDPS > 0:
+        regheal = char2MaxTimeToKill * char1.HealthRegenPerSecond
+        char2MaxTimeToKill += char2.AttackSpeed
+        if char2MaxTimeToKill > 100:
+            char2MaxTimeToKill = -1
+            break
+
+    char1MaxHits = round(char1MaxTimeToKill/char1.AttackSpeed)
+    char2MaxHits = round(char2MaxTimeToKill / char2.AttackSpeed)
+
+    char1CritCount = determinCritCount(char1, char1MaxHits)
+    char2CritCount = determinCritCount(char2, char2MaxHits)
+
+
+
+
+
+
+
 class battleThread(threading.Thread):
     def __init__(self, char1, char2, rounds):
         threading.Thread.__init__(self)
         self.char1 = char1
         self.char2 = char2
         self.rounds = rounds
+        self.isActive = False
     def run(self):
+        self.isActive = True
         for i in range(0, self.rounds):
             winner = battle(self.char1.Stats, self.char2.Stats)
             if winner is self.char1.Stats:
-                self.char1.Lock.acquire()
                 self.char1.Rating += 1
-                self.char1.Lock.release()
-                self.char2.Lock.acquire()
                 self.char2.Rating -= 1
-                self.char2.Lock.release()
             elif winner is self.char2.Stats:
-                self.char1.Lock.acquire()
                 self.char1.Rating -= 1
-                self.char1.Lock.release()
-                self.char2.Lock.acquire()
                 self.char2.Rating += 1
-                self.char2.Lock.release()
+        self.isActive = False
+
+
 
 
 

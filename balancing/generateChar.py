@@ -3,12 +3,12 @@ from model import CharStats
 import random as rnd
 import helper as hlp
 
-atkSpdFactor = 0.02
-atkFactor = 1
+atkSpdFactor = 0.05
+atkFactor = 0.95
 critFactor = 1
 critChanceFactor = 1
 deffFactor = 1
-hpFactor = 1
+hpFactor = 1.5
 regFactor = 1
 
 baseStats = CharStats(1, 1, 5, 2, 0.5, 10, 10, 0.1)
@@ -18,9 +18,9 @@ def generateRandom(budget):
     char = baseStats.clone()
     rnd.seed()
     for i in range(0, budget):
-        attr = rnd.randrange(1, 7, 1)
+        attr = rnd.randrange(1, 8, 1)
         if char.AttackSpeed <= 0.1 and attr == 1:
-            attr = rnd.randrange(2, 7, 1)
+            attr = rnd.randrange(2, 8, 1)
         if attr == 1:
             char.AttackSpeed -= atkSpdFactor
             if char.AttackSpeed <= 0:
