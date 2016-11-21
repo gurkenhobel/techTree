@@ -4,20 +4,24 @@ import helper as hlp
 import random as rnd
 import fight as fight
 import threading as trdng
+import multiprocessing as mltpcssng
 
 powerLevel = 100
 populationMax = 50
 populationMin = 40
-iterations = 1000
+iterations = 100
 roundsPerMatch = 4
 
 population = []
 
+maxThreads = 4
+if maxThreads > mltpcssng.cpu_count():
+    maxThreads = mltpcssng.cpu_count()
 
 
 def rate(pool):
     print "rate population"
-    threadsIdle = 4
+    threadsIdle = maxThreads
     threadsActive = []
     pb = hlp.ProgressBar(len(pool) - 1)
     for i in range(0, len(pool)):
