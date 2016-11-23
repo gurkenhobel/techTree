@@ -5,6 +5,7 @@ import random as rnd
 import fight as fight
 import threading as trdng
 import multiprocessing as mltpcssng
+import matplotlib.pyplot as plot
 
 powerLevel = 100
 populationMax = 50
@@ -14,9 +15,7 @@ roundsPerMatch = 4
 
 population = []
 
-maxThreads = 4
-if maxThreads > mltpcssng.cpu_count():
-    maxThreads = mltpcssng.cpu_count()
+maxThreads = mltpcssng.cpu_count()
 
 
 def rate(pool):
@@ -77,6 +76,13 @@ def decimate(pool):
         rate(pool)
         decimate(pool)
 
+def getBestStats(pool):
+    result = pool[0]
+    for c in pool:
+        if pool[c].Rating > result.Rating:
+            result = pool[c]
+    return result.Stats
+
 def populate(pool, i):
     print "create generation", i
     pb = hlp.ProgressBar(populationMax - 1)
@@ -102,12 +108,31 @@ for i in range(0, populationMax):
 pb.done()
 #initialRating
 rate(population)
+
+bestStats = getBestStats(population)
+stats = dict(bestStats.__dict__)
+
+x = range(0, 7)
+y = stats.values()
+
+plot.plot(x, y, "yo", x, y[x])
+plot.show()
+
 g = 1
 for i in range(1, iterations):
     decimate(population)
     g += 1
     populate(population, g)
     rate(population)
+
+    bestStats = getBestStats(population)
+    stats = dict(bestStats.__dict__)
+
+    x = range(0, 7)
+    y = stats.values()
+
+    plot.plot(x, y, "yo", x, y[x])
+    plot.show()
 
 
 best = population[0]
